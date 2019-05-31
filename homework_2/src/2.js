@@ -1,5 +1,5 @@
 // Задача №2
-function arr(){
+    export function secondTask(){
     let num = []    
     while(num.length < 50)
     {
@@ -9,5 +9,6 @@ function arr(){
         }
     }         
     return num.sort((a,b) => a - b)
-}
-console.log(arr())
+    }
+
+

@@ -1,84 +1,67 @@
-const columns = JSON.parse(window.localStorage.getItem('columns'))
-const cards = JSON.parse(window.localStorage.getItem('cards'))
+import { columns } from './columns';
+import { cards, addCards, delCards } from './cards';
+
 const fragmentColumns = document.createDocumentFragment()
+let ids = columns.map((columns)=>{return columns.id})
+ids = ids.concat(cards.map((cards)=>{return cards.id}))
 
 for (let i = 0; i < columns.length; i++) {
-  let button = createButton('+', columns[i].id, createNewCard)
-  fragmentColumns.append(createDiv(columns[i].id, columns[i].title, button))
+  let button = createButton('+', createNewCard, columns[i].id)
+  const div = createDiv(columns[i].id, columns[i].title)
+  div.append(button)
+  fragmentColumns.append(div)
   document.getElementById('box').appendChild(fragmentColumns)
 }
 
 for (let i = 0; i < columns.length; i++) {
-const fragmentCards = document.createDocumentFragment()
-
   for (let j = 0; j < cards.length; j++) {
     if (columns[i].id === cards[j].column){
-
-      let button = createButton('-', cards[j].id, delCards)
-      fragmentCards.append(createDiv(cards[j].id, cards[j].title, button))   
-
+      drawNewCard(cards[j].id, cards[j].title, columns[i].id)
     }
   }
-  document.getElementById(columns[i].id).appendChild(fragmentCards)
-  
 }
 
-function addCards(thisid){
-  let id = 0
-  let flag = false
-  while(flag != true){
-    flag = true
-    for (let i = 0; i < cards.length; i++) {
-      if (id === cards[i].id || id === cards[i].column){
-        flag = false
-        id++
-      }
-    }
-  }
-  cards[cards.length] = {
-    id: id,
-    title: prompt(),
-    column: +thisid
-  }
-  window.localStorage.setItem('cards', JSON.stringify(cards));
-  return Promise.resolve()
-}
-
-function delCards(){
-  for (i = 0; i < cards.length; i++){
-    if(this.id == cards[i].id){
+function removeCards(){
+  for (let i = 0; i < cards.length; i++){
+    if(this.div == cards[i].id){
       cards.splice(i,1)
-      window.localStorage.setItem('cards', JSON.stringify(cards));
-      document.getElementById(this.id).remove()
+      delCards()
+      document.getElementById(this.div).remove()
       break   
     }
   }
 }
 
-function createDiv(id, title, createButon){
+function createDiv(id, title){
   const div = document.createElement('div')
   div.id = id
   div.append(title)
-  div.append(createButon)
   return div
 }
 
-function createButton(symbol, id, func){
+function createButton(symbol, func, divId){
   var button = document.createElement('button')
   button.append(symbol)
-  button.id = id
+  button.id = idGenerate()
   button.onclick = func
+  button.div = divId
   return button
 }
 
-function DrawNewCard(id, title, thisid){
-  const fragmentNewCards = document.createDocumentFragment()
-  let button = createButton('-', id, delCards)
-  fragmentNewCards.append(createDiv(id, title, button))
-  document.getElementById(thisid).appendChild(fragmentNewCards)
+function drawNewCard(id, title, thisid){
+  let button = createButton('-', removeCards, id)
+  const div = createDiv(id, title)
+  div.append(button)
+  document.getElementById(thisid).appendChild(div)
 }
 
 function createNewCard(){
-  addCards(this.id)
-  .then(DrawNewCard(cards[cards.length - 1].id, cards[cards.length - 1].title, this.id))
+  addCards(this.div)
+  .then(newCard => drawNewCard(newCard.id, newCard.title, this.div))
+}
+
+export function idGenerate(){
+  let id = Math.max.apply(null, ids) + 1
+  ids.push(id)
+  return id
 }

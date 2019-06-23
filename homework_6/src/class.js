@@ -12,28 +12,53 @@ export class Hamburger{
     return ('mustard') 
   }
   constructor(size){
-    if (size === undefined){
-      throw new Error('Введите коректный размер бургера');
+    let flag = false
+    this.sizeList().find((index) => {
+      if (index === size){
+        flag = true
+      }
+    })
+    if (flag === true){
+      this.size = size
+      this.sauces = {}
     }
     else{
-       this.size = size
-    }
+      throw new Error('Введите коректный размер бургера');
+    }    
   }
   addSauce(sauce){
-    if (sauce === undefined){
-      throw new Error('Введите коректный соус');
+    let flag = false
+    this.sauceList().find((index) => {
+      if (index === sauce){
+        flag = true
+      }
+    })
+    if (flag === true){
+      this.sauces[sauce] = true
     }
     else{
-      this[sauce] = true
-    }
+      throw new Error('Введите коректный соус');
+    }    
   }
-  getPrice(){
+  sizeList(){
+    let size = ['small', 'big']
+    return size
+  }
+  sauceList(){
+    let sauce = ['mayo', 'mustard']
+    return sauce
+  }
+  priceList(){
     let prices = {
       small: 30,
       big: 50,
       mayo: 5,
       mustard: 5
     }
+    return prices
+  }
+  getPrice(){
+    let prices = this.priceList()
     let price = 0
     if (this.size === "small"){
       price += prices.small
@@ -41,27 +66,40 @@ export class Hamburger{
     if (this.size === "big"){
       price += prices.big
     }
-    if (this.mayo){
+    if (this.sauces.mayo){
       price += prices.mayo
     }
-    if (this.mustard){
+    if (this.sauces.mustard){
       price += prices.mustard
     }
-    console.log('Цена гамбургера: ' + price)
+    //console.log('Цена гамбургера: ' + price)
+    return price
   }
   removeSauce(sauce){
-    if (sauce === undefined){
+    let flag = false
+    this.sauceList().find((index) => {
+      if (index === sauce){
+        flag = true
+      }
+    })
+    if (flag === true){
+      this.sauces[sauce] = false
+    }
+    else{
       throw new Error('Введите коректный соус');
     }
-    this[sauce] = false
   }
-  getCalories(){
+  caloriesList(){
     let calories = {
       small: 200,
       big: 320,
       mayo: 30,
       mustard: 35
     }
+    return calories
+  }
+  getCalories(){
+    let calories = this.caloriesList()
     let kcalories = 0
     if (this.size === "small"){
       kcalories += calories.small
@@ -69,13 +107,14 @@ export class Hamburger{
     if (this.size === "big"){
       kcalories += calories.big
     }
-    if (this.mayo){
+    if (this.sauces.mayo){
       kcalories += calories.mayo
     }
-    if (this.mustard){
+    if (this.sauces.mustard){
       kcalories += calories.mustard
     }
-    console.log('Калорийность гамбургера: ' + kcalories)
+    //console.log('Калорийность гамбургера: ' + kcalories)
+    return kcalories
   }
 }
 
@@ -83,7 +122,7 @@ export class Сheeseburger extends Hamburger{
   static get SAUCE_TARTAR(){
     return ('tartar') 
   }
-  getPrice(){
+  priceList(){
     let prices = {
       small: 40,
       big: 70,
@@ -91,25 +130,9 @@ export class Сheeseburger extends Hamburger{
       mustard: 5,
       tartar: 7
     }
-    let price = 0
-    if (this.size === "small"){
-      price += prices.small
-    }
-    if (this.size === "big"){
-      price += prices.big
-    }
-    if (this.mayo){
-      price += prices.mayo
-    }
-    if (this.mustard){
-      price += prices.mustard
-    }
-    if (this.tartar){
-      price += prices.tartar
-    }
-    console.log('Цена чизбургера: ' + price)
+    return prices
   }
-  getCalories(){
+  caloriesList(){
     let calories = {
       small: 250,
       big: 400,
@@ -117,22 +140,26 @@ export class Сheeseburger extends Hamburger{
       mustard: 35,
       tartar: 37
     }
-    let kcalories = 0
-    if (this.size === "small"){
-      kcalories += calories.small
+    return calories
+  }
+  sauceList(){
+    let sauce = ['mayo', 'mustard', 'tartar']
+    return sauce
+  }
+  getPrice(){
+    let price = super.getPrice()
+    if (this.sauces.tartar){
+      price += this.priceList().tartar
     }
-    if (this.size === "big"){
-      kcalories += calories.big
+    return price
+    //console.log('Цена чизбургера: ' + price)
+  }
+  getCalories(){
+    let kcalories = super.getCalories()
+    if (this.sauces.tartar){
+      kcalories += this.caloriesList().tartar
     }
-    if (this.mayo){
-      kcalories += calories.mayo
-    }
-    if (this.mustard){
-      kcalories += calories.mustard
-    }
-    if (this.tartar){
-      kcalories += calories.tartar
-    }
-    console.log('Калорийность чизбургера: ' + kcalories)
+    return kcalories
+    //console.log('Калорийность чизбургера: ' + kcalories)
   }
 }

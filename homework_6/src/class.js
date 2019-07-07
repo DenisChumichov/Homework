@@ -1,15 +1,15 @@
 export class Hamburger{
   static get SIZE_SMALL(){
-    return ('small')  
+    return (this.name + '_small')  
   }
   static get SIZE_BIG(){
-    return ('big') 
+    return (this.name + '_big') 
   }
   static get SAUCE_MAYO(){
-    return ('mayo')
+    return (this.name + '_mayo')
   }
   static get SAUCE_MUSTARD(){
-    return ('mustard') 
+    return (this.name + '_mustard') 
   }
   constructor(size){
     let flag = false
@@ -20,7 +20,7 @@ export class Hamburger{
     })
     if (flag === true){
       this.size = size
-      this.sauces = {}
+      this.sauces = []
     }
     else{
       throw new Error('Введите коректный размер бургера');
@@ -32,47 +32,44 @@ export class Hamburger{
       if (index === sauce){
         flag = true
       }
-    })
+    }) 
     if (flag === true){
-      this.sauces[sauce] = true
+      this.sauces.push(sauce)
     }
     else{
       throw new Error('Введите коректный соус');
     }    
   }
   sizeList(){
-    let size = ['small', 'big']
+    let size = ['Hamburger_small', 'Hamburger_big']
     return size
   }
   sauceList(){
-    let sauce = ['mayo', 'mustard']
+    let sauce = ['Hamburger_mayo', 'Hamburger_mustard']
     return sauce
   }
   priceList(){
     let prices = {
-      small: 30,
-      big: 50,
-      mayo: 5,
-      mustard: 5
+      Hamburger_small: 30,
+      Hamburger_big: 50,
+      Hamburger_mayo: 5,
+      Hamburger_mustard: 5
     }
     return prices
   }
   getPrice(){
     let prices = this.priceList()
     let price = 0
-    if (this.size === "small"){
-      price += prices.small
-    }
-    if (this.size === "big"){
-      price += prices.big
-    }
-    if (this.sauces.mayo){
-      price += prices.mayo
-    }
-    if (this.sauces.mustard){
-      price += prices.mustard
-    }
-    //console.log('Цена гамбургера: ' + price)
+    this.sizeList().map((index) => {
+      if (this.size.indexOf(index) !== -1){
+        price += prices[index]
+      }
+    })
+    this.sauceList().map((index) => {
+      if (this.sauces.indexOf(index) !== -1){
+        price += prices[index]
+      }
+    })
     return price
   }
   removeSauce(sauce){
@@ -83,7 +80,12 @@ export class Hamburger{
       }
     })
     if (flag === true){
-      this.sauces[sauce] = false
+      if (this.sauces.indexOf(sauce) === -1){
+        throw new Error('Такого соуса нет в вашем бургере');
+      }
+      else{
+        this.sauces.splice(this.sauces.indexOf(sauce),1)
+      }
     }
     else{
       throw new Error('Введите коректный соус');
@@ -91,75 +93,60 @@ export class Hamburger{
   }
   caloriesList(){
     let calories = {
-      small: 200,
-      big: 320,
-      mayo: 30,
-      mustard: 35
+      Hamburger_small: 200,
+      Hamburger_big: 320,
+      Hamburger_mayo: 30,
+      Hamburger_mustard: 35
     }
     return calories
   }
   getCalories(){
     let calories = this.caloriesList()
     let kcalories = 0
-    if (this.size === "small"){
-      kcalories += calories.small
-    }
-    if (this.size === "big"){
-      kcalories += calories.big
-    }
-    if (this.sauces.mayo){
-      kcalories += calories.mayo
-    }
-    if (this.sauces.mustard){
-      kcalories += calories.mustard
-    }
-    //console.log('Калорийность гамбургера: ' + kcalories)
+    this.sizeList().map((index) => {
+      if (this.size.indexOf(index) !== -1){
+        kcalories += calories[index]
+      }
+    })
+    this.sauceList().map((index) => {
+      if (this.sauces.indexOf(index) !== -1){
+        kcalories += calories[index]
+      }
+    })
     return kcalories
   }
 }
 
 export class Сheeseburger extends Hamburger{
   static get SAUCE_TARTAR(){
-    return ('tartar') 
+    return (this.name + '_tartar') 
+  }
+  sizeList(){
+    let size = ['Сheeseburger_small', 'Сheeseburger_big']
+    return size
   }
   priceList(){
     let prices = {
-      small: 40,
-      big: 70,
-      mayo: 5,
-      mustard: 5,
-      tartar: 7
+      Сheeseburger_small: 40,
+      Сheeseburger_big: 70,
+      Сheeseburger_mayo: 5,
+      Сheeseburger_mustard: 5,
+      Сheeseburger_tartar: 7
     }
     return prices
   }
   caloriesList(){
     let calories = {
-      small: 250,
-      big: 400,
-      mayo: 30,
-      mustard: 35,
-      tartar: 37
+      Сheeseburger_small: 250,
+      Сheeseburger_big: 400,
+      Сheeseburger_mayo: 30,
+      Сheeseburger_mustard: 35,
+      Сheeseburger_tartar: 37
     }
     return calories
   }
   sauceList(){
-    let sauce = ['mayo', 'mustard', 'tartar']
+    let sauce = ['Сheeseburger_mayo', 'Сheeseburger_mustard', 'Сheeseburger_tartar']
     return sauce
-  }
-  getPrice(){
-    let price = super.getPrice()
-    if (this.sauces.tartar){
-      price += this.priceList().tartar
-    }
-    return price
-    //console.log('Цена чизбургера: ' + price)
-  }
-  getCalories(){
-    let kcalories = super.getCalories()
-    if (this.sauces.tartar){
-      kcalories += this.caloriesList().tartar
-    }
-    return kcalories
-    //console.log('Калорийность чизбургера: ' + kcalories)
   }
 }

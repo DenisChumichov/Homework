@@ -1,0 +1,24 @@
+.box{
+    white-space:nowrap
+}
+.box div{
+    float: left;
+    width:300px;
+    display:inline-block;
+    border:1px solid black;
+}
+.box button{
+    float: right;
+    width: 18px;
+    height: 18px;
+    text-align: center;
+}
+.notifications{
+    float: right;
+}
+.technical{
+    font-size: 100%
+}
+.box div.over {
+    border: 2px dashed rgb(255, 0, 0);
+  }
